@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>main.js Test Suite</title>  
+  <script src="../libs/jquery/jquery.js"></script>  
+  <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
+  <link rel="stylesheet" href="../libs/bootstrap/bootstrap.css">
+  <script src="../libs/bootstrap/bootstrap.js"></script>
+  <script src="../libs/qunit/qunit.js"></script>  
+  <script src="../src/tabelku.js"></script>  
+  <script src="../src/main.js"></script>  
+  <script>      
+      // Mocking Ajax agar tidak memanggil URL (karena tidak ada server disini!)
+      jQuery.ajax = function(settings) {
+          if (settings.url == 'http://localhost/testajax') {
+            var data = [
+              {kodeBarang: 'BRG-1', namaBarang: 'Nama Barang 1', qty: 10},
+              {kodeBarang: 'BRG-2', namaBarang: 'Nama Barang 2', qty: 20},
+              {kodeBarang: 'BRG-3', namaBarang: 'Nama Barang 3', qty: 30}
+            ];
+            settings.success(data);          
+          } 
+      };
+
+      window._$ = jQuery.noConflict(true);
+
+      QUnit.test('ambil data tabel secara ajax', function(assert) {
+        var t = _$('#tbl1');
+        t.tabelku({
+          kolom: [
+            {nama: 'kodeBarang', text: 'Kode Barang'},
+            {nama: 'namaBarang', text: 'Nama Barang'},
+            {nama: 'qty', text: 'Qty'}
+          ],
+          ajaxDataUrl: 'http://localhost/testajax'
+        });        
+
+        t[0].tabel.refresh();
+
+        assert.equal(t.find('tbody tr').size(), 3, 'tabel terdiri atas 3 baris');        
+        assert.equal(t[0].tabel.jumlahBaris, 3, 'tabel.jumlahBaris harus bernilai 3');        
+
+        assert.equal(t.find('tbody tr:eq(0) td:eq(0) input').attr('type'), 'checkbox', "baris 1, kolom 1 = checkbox");
+        assert.equal(t.find('tbody tr:eq(0) td:eq(1)').text(), 'BRG-1', "baris 1, kolom 2 = 'BRG-1'");
+        assert.equal(t.find('tbody tr:eq(0) td:eq(2)').text(), 'Nama Barang 1', "baris 1, kolom 3 = 'Nama Barang 1'");
+        assert.equal(t.find('tbody tr:eq(0) td:eq(3)').text(), '10', "baris 1, kolom 4 = '10'");        
+
+        assert.equal(t.find('tbody tr:eq(1) td:eq(0) input').attr('type'), 'checkbox', "baris 2, kolom 1 = checkbox");
+        assert.equal(t.find('tbody tr:eq(1) td:eq(1)').text(), 'BRG-2', "baris 2, kolom 2 = 'BRG-1'");
+        assert.equal(t.find('tbody tr:eq(1) td:eq(2)').text(), 'Nama Barang 2', "baris 2, kolom 3 = 'Nama Barang 1'");
+        assert.equal(t.find('tbody tr:eq(1) td:eq(3)').text(), '20', "baris 2, kolom 4 = '20'");        
+
+        assert.equal(t.find('tbody tr:eq(2) td:eq(0) input').attr('type'), 'checkbox', "baris 3, kolom 1 = checkbox");
+        assert.equal(t.find('tbody tr:eq(2) td:eq(1)').text(), 'BRG-3', "baris 3, kolom 2 = 'BRG-1'");
+        assert.equal(t.find('tbody tr:eq(2) td:eq(2)').text(), 'Nama Barang 3', "baris 3, kolom 3 = 'Nama Barang 1'");
+        assert.equal(t.find('tbody tr:eq(2) td:eq(3)').text(), '30', "baris 3, kolom 4 = '30'");                
+      });
+
+      QUnit.test('refresh() secara Ajax', function(assert) {
+        var t = _$('#tbl2');
+        t.tabelku({
+          kolom: [
+            {nama: 'kodeBarang', text: 'Kode Barang'},
+            {nama: 'namaBarang', text: 'Nama Barang'},
+            {nama: 'qty', text: 'Qty'}
+          ],
+          data: [
+            {kodeBarang: 'BRG-1', namaBarang: 'Nama Barang 1', qty: 10}            
+          ],
+          ajaxDataUrl: 'http://localhost/testajax'
+        });        
+
+        t[0].tabel.refresh();
+
+        assert.equal(t.find('tbody tr').size(), 3, 'tabel terdiri atas 3 baris');        
+        assert.equal(t[0].tabel.jumlahBaris, 3, 'tabel.jumlahBaris harus bernilai 3');
+        
+        assert.equal(t.find('tbody tr:eq(0) td:eq(0) input').attr('type'), 'checkbox', "baris 1, kolom 1 = checkbox");
+        assert.equal(t.find('tbody tr:eq(0) td:eq(1)').text(), 'BRG-1', "baris 1, kolom 2 = 'BRG-1'");
+        assert.equal(t.find('tbody tr:eq(0) td:eq(2)').text(), 'Nama Barang 1', "baris 1, kolom 3 = 'Nama Barang 1'");
+        assert.equal(t.find('tbody tr:eq(0) td:eq(3)').text(), '10', "baris 1, kolom 4 = '10'");        
+
+        assert.equal(t.find('tbody tr:eq(1) td:eq(0) input').attr('type'), 'checkbox', "baris 2, kolom 1 = checkbox");
+        assert.equal(t.find('tbody tr:eq(1) td:eq(1)').text(), 'BRG-2', "baris 2, kolom 2 = 'BRG-1'");
+        assert.equal(t.find('tbody tr:eq(1) td:eq(2)').text(), 'Nama Barang 2', "baris 2, kolom 3 = 'Nama Barang 1'");
+        assert.equal(t.find('tbody tr:eq(1) td:eq(3)').text(), '20', "baris 2, kolom 4 = '20'");        
+
+        assert.equal(t.find('tbody tr:eq(2) td:eq(0) input').attr('type'), 'checkbox', "baris 3, kolom 1 = checkbox");
+        assert.equal(t.find('tbody tr:eq(2) td:eq(1)').text(), 'BRG-3', "baris 3, kolom 2 = 'BRG-1'");
+        assert.equal(t.find('tbody tr:eq(2) td:eq(2)').text(), 'Nama Barang 3', "baris 3, kolom 3 = 'Nama Barang 1'");
+        assert.equal(t.find('tbody tr:eq(2) td:eq(3)').text(), '30', "baris 3, kolom 4 = '30'");                
+      });      
+  </script>    
+</head>
+<body>
+  <div id="qunit"></div>  
+  <table id="tbl1"></table>
+  <table id="tbl2"></table>
+  <table id="tbl3"></table>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>main.js Test Suite</title>  
+  <script src="../libs/jquery/jquery.js"></script>  
+  <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
+  <link rel="stylesheet" href="../libs/bootstrap/bootstrap.css">
+  <script src="../libs/bootstrap/bootstrap.js"></script>
+  <script src="../libs/qunit/qunit.js"></script>  
+  <script src="../src/tabelku.js"></script>  
+  <script src="../src/main.js"></script>  
+  <script>
+      window._$ = jQuery.noConflict(true);
+
+      QUnit.test('buat tabel baru', function(assert) {        
+        var t = _$("#tbl");
+        t.tabelku();
+        assert.ok(t[0].tabel, 'elemen harus memperoleh property tabel');
+        assert.ok(t[0].tabel instanceof LATIHAN.Tabelku, 'tabel harus instance dari class LATIHAN.Tabelku');
+        assert.equal(t.parent()[0].tagName, 'DIV', 'tabel harus di-wrap oleh sebuah <div>');
+        assert.ok(t.parent().hasClass('table-responsive'), "wrapper harus memiliki class 'table-responsive'");
+        assert.ok(t.hasClass('table'), "tabel harus memiliki class 'table'");
+        assert.ok(t.hasClass('table-hover'), "tabel harus memiliki class 'table-hover'");
+      });
+
+  </script>    
+</head>
+<body>
+  <div id="qunit"></div>
+  <table id="tbl"></table>
+</body>
+</html>

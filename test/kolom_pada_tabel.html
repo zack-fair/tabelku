@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>main.js Test Suite</title>  
+  <script src="../libs/jquery/jquery.js"></script>  
+  <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
+  <link rel="stylesheet" href="../libs/bootstrap/bootstrap.css">
+  <script src="../libs/bootstrap/bootstrap.js"></script>
+  <script src="../libs/qunit/qunit.js"></script>  
+  <script src="../src/tabelku.js"></script>  
+  <script src="../src/main.js"></script>  
+  <script>
+      window._$ = jQuery.noConflict(true);
+
+      QUnit.test('kolom pada tabel', function(assert) {
+        var t = _$('#tbl');
+        t.tabelku({
+          kolom: [
+            {nama: 'kodeBarang', text: 'Kode Barang'},
+            {nama: 'namaBarang', text: 'Nama Barang'},
+            {nama: 'qty', text: 'Qty'}
+          ]
+        });
+        assert.equal(t.find('thead tr th').size(), 4, 'tabel terdiri atas 4 kolom');        
+        assert.equal(t.find('thead tr th:eq(0) input').attr('type'), 'checkbox', 'kolom pertama berupa checkbox');
+        assert.equal(t.find('thead tr th:eq(1)').text(), 'Kode Barang', 'kolom kedua bernama Kode Barang');
+        assert.equal(t.find('thead tr th:eq(2)').text(), 'Nama Barang', 'kolom ketiga bernama Nama Barang');
+        assert.equal(t.find('thead tr th:eq(3)').text(), 'Qty', 'kolom keempat bernama Qty');
+      });      
+
+  </script>    
+</head>
+<body>
+  <div id="qunit"></div>
+  <table id="tbl"></table>
+</body>
+</html>

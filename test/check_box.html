@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>main.js Test Suite</title>  
+  <script src="../libs/jquery/jquery.js"></script>  
+  <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
+  <link rel="stylesheet" href="../libs/bootstrap/bootstrap.css">
+  <script src="../libs/bootstrap/bootstrap.js"></script>
+  <script src="../libs/qunit/qunit.js"></script>  
+  <script src="../src/tabelku.js"></script>  
+  <script src="../src/main.js"></script>  
+  <script>
+      window._$ = jQuery.noConflict(true);
+
+      QUnit.test('check() dengan parameter', function(assert) {
+        var t = _$('#tbl1');
+        t.tabelku({
+          kolom: [
+            {nama: 'kodeBarang', text: 'Kode Barang'},
+            {nama: 'namaBarang', text: 'Nama Barang'},
+            {nama: 'qty', text: 'Qty'}
+          ],
+          data: [
+            {kodeBarang: 'BRG-1', namaBarang: 'Nama Barang 1', qty: 10},
+            {kodeBarang: 'BRG-2', namaBarang: 'Nama Barang 2', qty: 20},
+            {kodeBarang: 'BRG-3', namaBarang: 'Nama Barang 3', qty: 30}
+          ]
+        });        
+
+        t[0].tabel.check(0, true);
+        t[0].tabel.check(1, true);
+        t[0].tabel.check(2, true);
+        t[0].tabel.check(1, false);
+
+        assert.ok(t.find('tbody tr:eq(0) td:eq(0) input').is(':checked'), "Checkbox pada baris pertama dicentang.");
+        assert.ok(!t.find('tbody tr:eq(1) td:eq(0) input').is(':checked'), "Checkbox pada baris kedua tidak dicentang.");
+        assert.ok(t.find('tbody tr:eq(2) td:eq(0) input').is(':checked'), "Checkbox pada baris ketiga dicentang.");
+        assert.deepEqual(t[0].tabel.indexTerpilih(), [0,2], 'indexTerpilih() bernilai [0,1].');
+        assert.deepEqual(t[0].tabel.objectTerpilih(), 
+          [{kodeBarang: 'BRG-1', namaBarang: 'Nama Barang 1', qty: 10}, {kodeBarang: 'BRG-3', namaBarang: 'Nama Barang 3', qty: 30}],
+          'objectTerpilih() mengembalikan object yang dipilih.');
+      });
+
+      QUnit.test('check() global', function(assert) {
+        var t = _$('#tbl2');
+        t.tabelku({
+          kolom: [
+            {nama: 'kodeBarang', text: 'Kode Barang'},
+            {nama: 'namaBarang', text: 'Nama Barang'},
+            {nama: 'qty', text: 'Qty'}
+          ],
+          data: [
+            {kodeBarang: 'BRG-1', namaBarang: 'Nama Barang 1', qty: 10},
+            {kodeBarang: 'BRG-2', namaBarang: 'Nama Barang 2', qty: 20},
+            {kodeBarang: 'BRG-3', namaBarang: 'Nama Barang 3', qty: 30}
+          ]
+        });        
+
+        t[0].tabel.check(-1, true);        
+
+        assert.ok(t.find('tbody tr:eq(0) td:eq(0) input').is(':checked'), "Checkbox pada baris pertama dicentang.");
+        assert.ok(t.find('tbody tr:eq(1) td:eq(0) input').is(':checked'), "Checkbox pada baris kedua dicentang.");
+        assert.ok(t.find('tbody tr:eq(2) td:eq(0) input').is(':checked'), "Checkbox pada baris ketiga dicentang.");          
+        assert.deepEqual(t[0].tabel.indexTerpilih(), [0,1,2], 'indexTerpilih() bernilai [0,1,2].');
+        assert.deepEqual(t[0].tabel.objectTerpilih(), [
+          {kodeBarang: 'BRG-1', namaBarang: 'Nama Barang 1', qty: 10},
+          {kodeBarang: 'BRG-2', namaBarang: 'Nama Barang 2', qty: 20},
+          {kodeBarang: 'BRG-3', namaBarang: 'Nama Barang 3', qty: 30}
+        ], 'objectTerpilih() mengembalikan seluruh object.');
+
+        t[0].tabel.check(-1, false);
+        assert.ok(!t.find('tbody tr:eq(0) td:eq(0) input').is(':checked'), "Checkbox pada baris pertama dicentang.");
+        assert.ok(!t.find('tbody tr:eq(1) td:eq(0) input').is(':checked'), "Checkbox pada baris kedua dicentang.");
+        assert.ok(!t.find('tbody tr:eq(2) td:eq(0) input').is(':checked'), "Checkbox pada baris ketiga dicentang.");                  
+        assert.deepEqual(t[0].tabel.indexTerpilih(), [], 'indexTerpilih() merupakan array kosong.');
+        assert.deepEqual(t[0].tabel.objectTerpilih(), [], 'objectTerpilih() mengembalikan array kosong.');
+      });
+
+  </script>    
+</head>
+<body>
+  <div id="qunit"></div>  
+  <table id="tbl1"></table>
+  <table id="tbl2"></table>  
+</body>
+</html>
