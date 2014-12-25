@@ -63,16 +63,16 @@ var LATIHAN = LATIHAN || {};
 
   function _refresh() {    
     $(this.tblBody).empty();
-    this.jumlahBaris = 0;
+    this.jumlahBaris = 0;    
     var object = this;
     this.params.data.forEach(function(data) {
-      _tambahBaris.call(object, data);      
+      _tambahBaris.call(object, data, false);      
     });
   }
 
   LATIHAN.Tabelku.prototype.tambahBaris = function(dataBaru, ajax) {        
     var object = this;
-    ajax = (ajax !== undefined)? ajax: true;
+    ajax = (ajax !== undefined)? ajax: true;    
     // Request Ajax bila perlu    
     if (ajax && (this.params.ajaxTambahUrl !== '')) {
       $.ajax({
@@ -89,14 +89,18 @@ var LATIHAN = LATIHAN || {};
     }
   };
 
-  function _tambahBaris(dataBaru) {
+  function _tambahBaris(dataBaru, update) {
+    update = (update !== undefined)? update: true;
     var baris = $('<tr/>');
     baris.append("<td><input type='checkbox' class='checkBaris' /></td>");
     this.params.kolom.forEach(function(kolom) {
       baris.append("<td>" + dataBaru[kolom.nama] + "</td>");
     });
     this.jumlahBaris++;
-    baris.appendTo(this.tblBody);    
+    baris.appendTo(this.tblBody);
+    if (update) {
+      this.params.data.push(dataBaru);
+    }
   }
 
   LATIHAN.Tabelku.prototype.hapusBarisTerpilih = function() {
@@ -112,6 +116,11 @@ var LATIHAN = LATIHAN || {};
 
     // Hapus seluruh baris terpilih    
     var barisTerpilih = $(this.tblBody).find('tr').has('td input:checked');
+    var object = this;
+    barisTerpilih.each(function(baris) {
+      var index = barisTerpilih.index(baris);
+      object.params.data.splice(index,1);
+    });
     this.jumlahBaris -= barisTerpilih.size();
     var hasil = this.params.sebelumHapus.call(this, barisTerpilih);    
     if ((hasil !== undefined) && (hasil === false)) {

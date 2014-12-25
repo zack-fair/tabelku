@@ -33,7 +33,9 @@
         t[0].tabel.hapusBarisTerpilih();
         
         assert.equal(t.find('tbody tr').size(), 1, 'tabel setelah dihapus terdiri atas 1 baris');        
-        assert.equal(t[0].tabel.jumlahBaris, 1, 'tabel.jumlahBaris harus bernilai 1');        
+        assert.equal(t[0].tabel.jumlahBaris, 1, 'tabel.jumlahBaris harus bernilai 1');  
+        assert.equal(t[0].tabel.params.data.length, 1, 'parameter data berjumlah 1');
+        assert.deepEqual(t[0].tabel.params.data[0], {kodeBarang: 'BRG-2', namaBarang: 'Nama Barang 2', qty: 20}, 'item 1 pada parameter data konsisten');
 
         assert.equal(t.find('tbody tr:eq(0) td:eq(0) input').attr('type'), 'checkbox', "baris 2, kolom 1 = checkbox");
         assert.equal(t.find('tbody tr:eq(0) td:eq(1)').text(), 'BRG-2', "baris 2, kolom 2 = 'BRG-1'");
@@ -74,7 +76,9 @@
         
         setTimeout(function() {
           assert.equal(t.find('tbody tr').size(), 1, 'tabel setelah dihapus terdiri atas 1 baris');        
-          assert.equal(t[0].tabel.jumlahBaris, 1, 'tabel.jumlahBaris harus bernilai 1');        
+          assert.equal(t[0].tabel.jumlahBaris, 1, 'tabel.jumlahBaris harus bernilai 1'); 
+          assert.equal(t[0].tabel.params.data.length, 1, 'parameter data berjumlah 1');
+          assert.deepEqual(t[0].tabel.params.data[0], {kodeBarang: 'BRG-2', namaBarang: 'Nama Barang 2', qty: 20}, 'item 2 pada parameter data konsisten');
 
           assert.equal(t.find('tbody tr:eq(0) td:eq(0) input').attr('type'), 'checkbox', "baris 2, kolom 1 = checkbox");
           assert.equal(t.find('tbody tr:eq(0) td:eq(1)').text(), 'BRG-2', "baris 2, kolom 2 = 'BRG-1'");
