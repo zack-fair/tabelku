@@ -75,8 +75,14 @@ var LATIHAN = LATIHAN || {};
     ajax = (ajax !== undefined)? ajax: true;
     // Request Ajax bila perlu    
     if (ajax && (this.params.ajaxTambahUrl !== '')) {
-      $.get(this.params.ajaxTambahUrl, dataBaru, function() {
-        _tambahBaris.call(object, dataBaru);
+      $.ajax({
+        url: this.params.ajaxTambahUrl,
+        type: 'POST',
+        data: JSON.stringify(dataBaru),
+        contentType: 'application/json; charset=utf-8',
+        success: function() {
+          _tambahBaris.call(object, dataBaru);  
+        }
       });
     } else {
       _tambahBaris.call(object, dataBaru);
@@ -90,13 +96,18 @@ var LATIHAN = LATIHAN || {};
       baris.append("<td>" + dataBaru[kolom.nama] + "</td>");
     });
     this.jumlahBaris++;
-    baris.appendTo(this.tblBody);
+    baris.appendTo(this.tblBody);    
   }
 
   LATIHAN.Tabelku.prototype.hapusBarisTerpilih = function() {
     // Request Ajax bila perlu
-    if (this.params.hapusUrl !== '') {          
-      $.get(this.params.ajaxHapusUrl, this.objectTerpilih());
+    if (this.params.hapusUrl !== '') {                
+      $.ajax({
+        url: this.params.ajaxHapusUrl,
+        type: 'POST',
+        data: JSON.stringify(this.objectTerpilih()),
+        contentType: 'application/json; charset=utf-8'
+      });
     }
 
     // Hapus seluruh baris terpilih    

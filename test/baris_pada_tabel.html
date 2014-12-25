@@ -132,7 +132,7 @@
         var diterimaServer1 = assert.async();        
         _$.ajax = function(settings) {
             if (settings.url == 'http://localhost/testajax') {
-              assert.deepEqual(settings.data, {kodeBarang: 'BRG-4', namaBarang: 'Nama Barang 4', qty: 10}, 'Data yang dikirim ke server harus sama dengan data pada baris.');
+              assert.equal(settings.data, JSON.stringify({kodeBarang: 'BRG-4', namaBarang: 'Nama Barang 4', qty: 10}), 'Data yang dikirim ke server harus sama dengan data pada baris.');
               diterimaServer1();
               settings.success();
             } 
@@ -143,7 +143,7 @@
         var diterimaServer2 = assert.async();
         _$.ajax = function(settings) {
             if (settings.url == 'http://localhost/testajax') {
-              assert.deepEqual(settings.data, {kodeBarang: 'BRG-5', namaBarang: 'Nama Barang 5', qty: 20}, 'Data yang dikirim ke server harus sama dengan data pada baris.');
+              assert.equal(settings.data, JSON.stringify({kodeBarang: 'BRG-5', namaBarang: 'Nama Barang 5', qty: 20}), 'Data yang dikirim ke server harus sama dengan data pada baris.');
               diterimaServer2();
               settings.success();
             } 
